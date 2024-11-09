@@ -1,45 +1,41 @@
+// Fix stuck form inputs
+// When you type into the input fields, nothing appears. It’s like the input values are “stuck” with empty strings. The value of the first <input> is set to always match the firstName variable, and the value for the second <input> is set to always match the lastName variable. This is correct. Both inputs have onChange event handlers, which try to update the variables based on the latest user input (e.target.value). However, the variables don’t seem to “remember” their values between re-renders. Fix this by using state variables instead.
 import { sculptureList } from "./data.js";
 import { useState } from "react";
 import "../src/App.css";
+export default function Form() {
+  let firstName = "";
+  let lastName = "";
 
-export default function App() {
-  const [index, setIndex] = useState(0);
-  const [showMore, setShowMore] = useState(false);
-  let hasPrev = index > 0;
-  let hasNext = index < sculptureList.length - 1;
-  function handlePrevClick() {
-    if (hasPrev) {
-      setIndex(index - 1);
-    }
+  function handleFirstNameChange(e) {
+    firstName = e.target.value;
   }
-  function handleNextClick() {
-    if (hasNext) {
-      setIndex(index + 1);
-    }
+
+  function handleLastNameChange(e) {
+    lastName = e.target.value;
   }
-  function handleShowMore() {
-    setShowMore(!showMore);
+
+  function handleReset() {
+    firstName = "";
+    lastName = "";
   }
-  let sculpture = sculptureList[index];
+
   return (
-    <>
-      <button onClick={handlePrevClick} disabled={!hasPrev}>
-        Prev
-      </button>
-      <button onClick={handleNextClick} disabled={!hasNext}>
-        Next
-      </button>
-      <h2>
-        <i>{sculpture.name}</i> by {sculpture.artist}
-      </h2>
-      <h3>
-        ({index + 1} of {sculptureList.length})
-      </h3>
-      <img className="photo" src={sculpture.url} alt={sculpture.alt} /> <br />
-      <button onClick={handleShowMore}>
-        {showMore ? "Hide" : "Show"} Details
-      </button>
-      {showMore && <p>{sculpture.description}</p>}
-    </>
+    <form onSubmit={(e) => e.preventDefault()}>
+      <input
+        placeholder="First name"
+        value={firstName}
+        onChange={handleFirstNameChange}
+      />
+      <input
+        placeholder="Last name"
+        value={lastName}
+        onChange={handleLastNameChange}
+      />
+      <h1>
+        Hi, {firstName} {lastName}
+      </h1>
+      <button onClick={handleReset}>Reset</button>
+    </form>
   );
 }
