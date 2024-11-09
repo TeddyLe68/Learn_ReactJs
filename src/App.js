@@ -1,42 +1,32 @@
-// Fix stuck form inputs
-// When you type into the input fields, nothing appears. It’s like the input values are “stuck” with empty strings. The value of the first <input> is set to always match the firstName variable, and the value for the second <input> is set to always match the lastName variable. This is correct. Both inputs have onChange event handlers, which try to update the variables based on the latest user input (e.target.value). However, the variables don’t seem to “remember” their values between re-renders. Fix this by using state variables instead.
+// Fix a crash
+// Here is a small form that is supposed to let the user leave some feedback. When the feedback is submitted, it’s supposed to display a thank-you message. However, it crashes with an error message saying “Rendered fewer hooks than expected”. Can you spot the mistake and fix it?variables instead.
 import { sculptureList } from "./data.js";
 import { useState } from "react";
 import "../src/App.css";
 
-export default function Form() {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  function handleFirstNameChange(e) {
-    setFirstName(e.target.value);
+export default function FeedbackForm() {
+  const [isSent, setIsSent] = useState(false);
+  if (isSent) {
+    return <h1>Thank you!</h1>;
+  } else {
+    // eslint-disable-next-line
+    const [message, setMessage] = useState("");
+    return (
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          alert(`Sending: "${message}"`);
+          setIsSent(true);
+        }}
+      >
+        <textarea
+          placeholder="Message"
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+        />
+        <br />
+        <button type="submit">Send</button>
+      </form>
+    );
   }
-
-  function handleLastNameChange(e) {
-    setLastName(e.target.value);
-  }
-
-  function handleReset() {
-    setFirstName("");
-    setLastName("");
-  }
-
-  return (
-    <form onSubmit={(e) => e.preventDefault()}>
-      <input
-        placeholder="First name"
-        value={firstName}
-        onChange={handleFirstNameChange}
-      />
-      <input
-        placeholder="Last name"
-        value={lastName}
-        onChange={handleLastNameChange}
-      />
-      <h1>
-        Hi, {firstName} {lastName}
-      </h1>
-      <button onClick={handleReset}>Reset</button>
-    </form>
-  );
 }
-// Fix the sculpture list
