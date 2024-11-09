@@ -3,21 +3,21 @@
 import { sculptureList } from "./data.js";
 import { useState } from "react";
 import "../src/App.css";
-export default function Form() {
-  let firstName = "";
-  let lastName = "";
 
+export default function Form() {
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   function handleFirstNameChange(e) {
-    firstName = e.target.value;
+    setFirstName(e.target.value);
   }
 
   function handleLastNameChange(e) {
-    lastName = e.target.value;
+    setLastName(e.target.value);
   }
 
   function handleReset() {
-    firstName = "";
-    lastName = "";
+    setFirstName("");
+    setLastName("");
   }
 
   return (
@@ -39,3 +39,4 @@ export default function Form() {
     </form>
   );
 }
+// Fix the sculpture list
