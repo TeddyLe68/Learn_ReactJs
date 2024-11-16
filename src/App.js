@@ -1,3 +1,56 @@
-export default function App() {
-  return <h1>Hello, this is the 4th day i learn react</h1>;
+import "./App.css";
+import { useState } from "react";
+import { Task } from "./Task";
+function App() {
+  const [toDoList, setToDoList] = useState([]);
+  const [newTask, setNewTask] = useState("");
+  const handleInputChange = (event) => {
+    setNewTask(event.target.value);
+  };
+  const addTask = () => {
+    const task = {
+      id: toDoList.length === 0 ? 1 : toDoList[toDoList.length - 1].id + 1,
+      taskName: newTask,
+      completed: false,
+    };
+    setToDoList([...toDoList, task]);
+  };
+  const deleteTask = (id) => {
+    setToDoList(toDoList.filter((task) => task.id !== id));
+  };
+  const completeTask = (id) => {
+    setToDoList(
+      toDoList.map((task) => {
+        if (task.id === id) {
+          return { ...task, completed: true };
+        } else {
+          return task;
+        }
+      })
+    );
+  };
+  return (
+    <div className="App">
+      <div className="addTask">
+        <input onChange={handleInputChange} />
+        <button onClick={addTask}>Add Task</button>
+      </div>
+      <div className="list">
+        {toDoList.map((todo, index) => {
+          return (
+            <Task
+              key={index}
+              taskName={todo.taskName}
+              id={todo.id}
+              completed={todo.completed}
+              deleteTask={deleteTask}
+              completeTask={completeTask}
+            />
+          );
+        })}
+      </div>
+    </div>
+  );
 }
+
+export default App;
